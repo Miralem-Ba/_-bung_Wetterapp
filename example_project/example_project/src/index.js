@@ -11,16 +11,38 @@ const MSGS = {
   DELETE_LOCATION: 'DELETE_LOCATION',
 };
 
-function view(dispatch, model) {
-  return div({ className: "flex flex-col gap-4 items-center" }, [
-    h1({ className: "text-2xl" }, `My Title`),
-    button({ className: btnStyle, onclick: () => dispatch(MSGS.UPDATE_MODEL) }, "Update Model"),
-    p({ className: "text-2xl" }, `Time: ${model.currentTime}`),
-    button({ className: btnStyle, onclick: () => dispatch(MSGS.UPDATE_RANDOM_NUMBER) }, "Update Random Number"),
-    p({ className: "text-2xl" }, `Random Number: ${model.randomNumber}`),
-  ]);
+function addLocation(dispatch, locationName) {
+
+  const apiKey = '5fa0f9177f62b229b77edbf0e3aa184c';
+
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${locationName}&appid=${apiKey}&units=metric`;
+
+  fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Weather data fetch failed');
+      }
+      return response.json();
+    })
+    .then(data => {
+
+      const weatherData = {
+        temp: data.main.temp, 
+        low: data.main.temp_min, 
+        high: data.main.temp_max, 
+      };
+
+      dispatch({ type: MSGS.ADD_LOCATION, payload: { locationName, weatherData } });
+    })
+    .catch(error => {
+      console.error('Error fetching weather:', error);
+
+    });
 }
 
+function deleteLocation(dispatch, locationId) {
+  dispatch({ type: MSGS.DELETE_LOCATION, payload: locationId });
+}
 
 function update(msg, model) {
   switch (msg) {
