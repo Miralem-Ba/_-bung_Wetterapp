@@ -89,6 +89,32 @@ function view(dispatch, model) {
   ]);
 }
 
+function update(msg, model) {
+  switch (msg.type) {
+    case MSGS.ADD_LOCATION:
+      const { locationName, weatherData } = msg.payload;
+      const newLocation = {
+        id: model.nextId,
+        name: locationName,
+        temp: weatherData.temp,
+        low: weatherData.low,
+        high: weatherData.high,
+      };
+      return {
+        ...model,
+        nextId: model.nextId + 1,
+        locations: model.locations.concat(newLocation)
+      };
+    case MSGS.DELETE_LOCATION:
+      return {
+        ...model,
+        locations: model.locations.filter(location => location.id !== msg.payload)
+      };
+    default:
+      return model;
+  }
+}
+
 function app(initModel, update, view, node) {
   let model = initModel;
   let currentView = view(dispatch, model);
