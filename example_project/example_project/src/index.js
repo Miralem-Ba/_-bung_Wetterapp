@@ -44,18 +44,6 @@ function deleteLocation(dispatch, locationId) {
   dispatch({ type: MSGS.DELETE_LOCATION, payload: locationId });
 }
 
-function update(msg, model) {
-  switch (msg) {
-    case MSGS.UPDATE_MODEL:
-      return { ...model, currentTime: new Date().toLocaleTimeString() };
-
-    case MSGS.UPDATE_RANDOM_NUMBER:
-      return { ...model, randomNumber: Math.random() };
-    default:
-      return model;
-  }
-}
-
 function viewLocation(location, dispatch) {
   return div({ className: "flex items-center justify-between bg-blue-100 p-4 my-2 rounded-lg shadow-md" }, [
     p({ className: "text-lg font-semibold" }, location.name),
