@@ -56,6 +56,38 @@ function update(msg, model) {
   }
 }
 
+function viewLocation(location, dispatch) {
+  return div({ className: "flex items-center justify-between bg-blue-100 p-4 my-2 rounded-lg shadow-md" }, [
+    p({ className: "text-lg font-semibold" }, location.name),
+    p({}, `Temp: ${location.temp}`),
+    p({}, `Low: ${location.low}`),
+    p({}, `High: ${location.high}`),
+    button({
+      className: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded inline-flex items-center",
+      onclick: () => deleteLocation(dispatch, location.id)
+    }, 'Delete'),
+  ]);
+}
+
+function view(dispatch, model) {
+  return div({ className: "max-w-2xl mx-auto mt-6" }, [
+    input({
+      type: 'text',
+      id: 'location-input',
+      className: 'border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none',
+      placeholder: 'Enter location...',
+    }),
+    button({
+      className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
+      onclick: () => {
+        const locationInput = document.getElementById('location-input');
+        addLocation(dispatch, locationInput.value);
+        locationInput.value = '';
+      }
+    }, 'Add'),
+    ...model.locations.map(location => viewLocation(location, dispatch)),
+  ]);
+}
 
 function app(initModel, update, view, node) {
   let model = initModel;
