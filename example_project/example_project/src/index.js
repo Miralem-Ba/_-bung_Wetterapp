@@ -13,7 +13,7 @@ const MSGS = {
 
 function addLocation(dispatch, locationName) {
 
-  const apiKey = '5fa0f9177f62b229b77edbf0e3aa184c';
+  const apiKey = ""
 
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${locationName}&appid=${apiKey}&units=metric`;
 
