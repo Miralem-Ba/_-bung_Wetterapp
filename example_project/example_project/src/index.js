@@ -120,6 +120,7 @@ function app(initModel, update, view, node) {
   let currentView = view(dispatch, model);
   let rootNode = createElement(currentView);
   node.appendChild(rootNode);
+
   function dispatch(msg) {
     model = update(msg, model);
     const updatedView = view(dispatch, model);
@@ -130,10 +131,9 @@ function app(initModel, update, view, node) {
 }
 
 const initModel = {
-  currentTime: new Date().toLocaleTimeString(),
-  randomNumber: 1,
+  nextId: 0,
+  locations: [],
 };
-
 
 const rootNode = document.getElementById("app");
 
