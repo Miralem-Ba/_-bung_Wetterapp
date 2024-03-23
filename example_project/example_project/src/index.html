@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Modul 323 - Weather App </title>
+    <title>Modul 323 - Weather App</title>
     <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="max-h-screen min-h-screen w-screen flex flex-col overflow-y-hidden">
-    <header class="p-4">
-      <div class="max-w-2xl m-auto flex items-center gap-4 border-b-gray-200 border-b pb-4">
-        <img src="logo.png" alt="Logo" class="w-10" />
-        <span class="font-mono font-bold">Modul 323 - Weather App</span>
-      </div>
+</head>
+<body class="bg-gray-100 h-screen">
+    <header class="bg-white shadow p-4">
+        <div class="max-w-2xl mx-auto flex items-center gap-4">
+            <img src="logo.png" alt="Logo" class="w-10" />
+            <h1 class="text-xl font-bold">Modul 323 - Weather App</h1>
+        </div>
     </header>
-    <main class="max-w-lg m-auto py-4 flex flex-col h-4/6 items-center gap-4 " id="app"></main>
-    <footer class="p-4 bottom-5 w-screen ">
-      <div class="max-w-2xl m-auto text-center border-t-gray-200 border-t pt-4">Let's hope for good Weather today</div>
+    <main class="container mx-auto py-6" id="app">
+    </main>
+    <footer class="absolute bottom-0 w-full p-4 bg-white">
+        <p class="text-center text-sm">Let's hope for good weather today</p>
     </footer>
-    <script src="bundle.js"></script>
-  </body>
+    <script src="index.js"></script>
+</body>
 </html>

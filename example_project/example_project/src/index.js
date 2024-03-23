@@ -4,39 +4,33 @@ import createElement from "virtual-dom/create-element";
 
 const { div, button, input, p } = hh(h);
 
-const btnStyle = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
-
 const MSGS = {
   ADD_LOCATION: 'ADD_LOCATION',
   DELETE_LOCATION: 'DELETE_LOCATION',
 };
 
 function addLocation(dispatch, locationName) {
-
-  const apiKey = ""
+  const apiKey = 'APIKEY'; 
 
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${locationName}&appid=${apiKey}&units=metric`;
 
   fetch(url)
     .then(response => {
       if (!response.ok) {
-        throw new Error('Weather data fetch failed');
+        throw new Error(`Weather data fetch failed with status: ${response.status}`);
       }
       return response.json();
     })
     .then(data => {
-
       const weatherData = {
-        temp: data.main.temp, 
-        low: data.main.temp_min, 
-        high: data.main.temp_max, 
+        temp: data.main.temp,
+        low: data.main.temp_min,
+        high: data.main.temp_max,
       };
-
       dispatch({ type: MSGS.ADD_LOCATION, payload: { locationName, weatherData } });
     })
     .catch(error => {
       console.error('Error fetching weather:', error);
-
     });
 }
 
@@ -45,11 +39,11 @@ function deleteLocation(dispatch, locationId) {
 }
 
 function viewLocation(location, dispatch) {
-  return div({ className: "flex items-center justify-between bg-blue-100 p-4 my-2 rounded-lg shadow-md" }, [
-    p({ className: "text-lg font-semibold" }, location.name),
-    p({}, `Temp: ${location.temp}`),
-    p({}, `Low: ${location.low}`),
-    p({}, `High: ${location.high}`),
+  return div({ className: "flex justify-between items-center bg-blue-100 p-4 my-2 rounded-lg shadow-md" }, [
+    div({ className: "w-1/4" }, [p({ className: "text-lg font-semibold" }, location.name)]),
+    div({ className: "w-1/4" }, [p({}, `Temp: ${location.temp}`)]),
+    div({ className: "w-1/4" }, [p({}, `Low: ${location.low}`)]),
+    div({ className: "w-1/4" }, [p({}, `High: ${location.high}`)]),
     button({
       className: "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded inline-flex items-center",
       onclick: () => deleteLocation(dispatch, location.id)
@@ -59,20 +53,22 @@ function viewLocation(location, dispatch) {
 
 function view(dispatch, model) {
   return div({ className: "max-w-2xl mx-auto mt-6" }, [
-    input({
-      type: 'text',
-      id: 'location-input',
-      className: 'border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none',
-      placeholder: 'Enter location...',
-    }),
-    button({
-      className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
-      onclick: () => {
-        const locationInput = document.getElementById('location-input');
-        addLocation(dispatch, locationInput.value);
-        locationInput.value = '';
-      }
-    }, 'Add'),
+    div({ className: "flex justify-center my-4" }, [
+      input({
+        type: 'text',
+        id: 'location-input',
+        className: 'border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none',
+        placeholder: 'Enter location...',
+      }),
+      button({
+        className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
+        onclick: () => {
+          const locationInput = document.getElementById('location-input');
+          addLocation(dispatch, locationInput.value);
+          locationInput.value = '';
+        }
+      }, 'Add'),
+    ]),
     ...model.locations.map(location => viewLocation(location, dispatch)),
   ]);
 }
@@ -119,10 +115,31 @@ function app(initModel, update, view, node) {
 }
 
 const initModel = {
-  nextId: 0,
-  locations: [],
+    nextId: 3,
+    locations: [
+      {
+        id: 0,
+        name: 'London',
+        temp: 5,
+        low: 3,
+        high: 5,
+      },
+      {
+        id: 1,
+        name: 'Bangkok',
+        temp: 27,
+        low: 24,
+        high: 28,
+      },
+      {
+        id: 2,
+        name: 'Bern',
+        temp: 3,
+        low: 1,
+        high: 4,
+      }
+    ],
 };
 
 const rootNode = document.getElementById("app");
-
 app(initModel, update, view, rootNode);
