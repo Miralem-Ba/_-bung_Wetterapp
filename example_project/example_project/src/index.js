@@ -1,4 +1,3 @@
-// index.js
 import hh from "hyperscript-helpers";
 import { h, diff, patch } from "virtual-dom";
 import createElement from "virtual-dom/create-element";
@@ -11,13 +10,10 @@ const MSGS = {
 };
 
 function addLocation(dispatch, locationName) {
-  // Ihre OpenWeatherMap API-Key
   const apiKey = 'APIKEY';
 
-  // OpenWeatherMap Endpoint mit Ihrem API-Key und dem Namen der Stadt (locationName)
   const url = `https://api.openweathermap.org/data/2.5/weather?q=${locationName}&appid=${apiKey}&units=metric`;
 
-  // API-Anfrage mit fetch
   fetch(url)
     .then(response => {
       if (!response.ok) {
@@ -26,18 +22,15 @@ function addLocation(dispatch, locationName) {
       return response.json();
     })
     .then(data => {
-      // Hier extrahieren wir die benötigten Daten aus der Antwort.
       const weatherData = {
-        temp: data.main.temp, // Aktuelle Temperatur
-        low: data.main.temp_min, // Niedrigste Temperatur
-        high: data.main.temp_max, // Höchste Temperatur
+        temp: data.main.temp,
+        low: data.main.temp_min, 
+        high: data.main.temp_max, 
       };
-      // Wir dispatchen die Daten an unsere Anwendung.
       dispatch({ type: MSGS.ADD_LOCATION, payload: { locationName, weatherData } });
     })
     .catch(error => {
       console.error('Error fetching weather:', error);
-      // Hier können Sie einen Fehler dispatchen oder eine Benutzerbenachrichtigung hinzufügen.
     });
 }
 
@@ -60,21 +53,28 @@ function viewLocation(location, dispatch) {
 
 function view(dispatch, model) {
   return div({ className: "max-w-2xl mx-auto mt-6" }, [
-    input({
-      type: 'text',
-      id: 'location-input',
-      className: 'border-2 border-gray-300 bg-white h-10 px-5 pr-16 rounded-lg text-sm focus:outline-none',
-      placeholder: 'Enter location...',
-    }),
-    button({
-      className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded",
-      onclick: () => {
-        const locationInput = document.getElementById('location-input');
-        addLocation(dispatch, locationInput.value);
-        locationInput.value = '';
-      }
-    }, 'Add'),
-    ...model.locations.map(location => viewLocation(location, dispatch)),
+    div({ className: "flex justify-center my-4" }, [
+      input({
+        type: 'text',
+        id: 'location-input',
+        className: 'border-2 border-gray-300 bg-white h-10 px-5 rounded-lg text-sm focus:outline-none w-full max-w-xs',
+        placeholder: 'Enter location...',
+      }),
+      button({
+        className: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2",
+        onclick: () => {
+          const locationInput = document.getElementById('location-input');
+          const locationName = locationInput.value;
+          if(locationName) {
+            addLocation(dispatch, locationName);
+          }
+          locationInput.value = '';
+        }
+      }, 'Add')
+    ]),
+    div({ className: "w-full" },
+      model.locations.map(location => viewLocation(location, dispatch))
+    )
   ]);
 }
 
